@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gopro.model;
+package com.gopro.dao;
 
-import com.gopro.entity.*;
+import com.gopro.model.Empresa;
 
 /**
  *
  * @author jgomez
  */
-public class ContactoModel extends AbstractModel<Contacto> {
+public class EmpresaDAO extends AbstractDAO<Empresa> {
     
-    public ContactoModel(){
-        super(Contacto.class);
+    public EmpresaDAO(){
+        super(Empresa.class);
     }
     
 }

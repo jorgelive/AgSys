@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gopro.entity;
+package com.gopro.model;
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
 @Entity
-@Table(name="paisasociacion")
+@Table(name="pais")
 
-public class Paisasociacion {
+public class Pais {
     
     @Id
     @GeneratedValue
@@ -20,13 +20,9 @@ public class Paisasociacion {
      
     @Column(name="nombre", unique = true, nullable = false, length = 100)
     private String nombre;
-    
-    @ManyToMany(mappedBy = "paisasociaciones")  
-    private Set<Pais> paises = new HashSet<Pais>();  
-  
-    public Paisasociacion() {
-         
-    }
+     
+    @Column(name="nacionalidad", unique = true, nullable = false, length = 100)
+    private String nacionalidad;
 
     public Long getId() {
         return id;
@@ -44,15 +40,13 @@ public class Paisasociacion {
         this.nombre = nombre;
     }
 
-    public Set<Pais> getPaises() {
-        return paises;
+    public String getNacionalidad() {
+        return nacionalidad;
     }
 
-    public void setPaises(Set<Pais> paises) {
-        this.paises = paises;
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
     }
-
-    
-    
+ 
 }
 

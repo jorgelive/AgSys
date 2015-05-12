@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gopro.entity;
+package com.gopro.model;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="contacto")
-public class Contacto {
+@Table(name="empresa")
+public class Empresa {
     
     @Id
     @GeneratedValue
@@ -17,13 +17,23 @@ public class Contacto {
      
     @Column(name="nombre", unique = true, nullable = false, length = 100)
     private String nombre;
+    
+    @Column(name="razonsocial", unique = true, nullable = false, length = 100)
+    private String razonsocial;
+    
+    @Column(name="ruc", unique = true, nullable = false, length = 20)
+    private String ruc;
      
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="pais_id")  
     private Pais pais;  
      
-    public Contacto() {
+    public Empresa() {
          
+    }
+
+    public String getRazonsocial() {
+        return razonsocial;
     }
 
     public Long getId() {
@@ -42,6 +52,18 @@ public class Contacto {
         this.nombre = nombre;
     }
 
+    public void setRazonsocial(String razonsocial) {
+        this.razonsocial = razonsocial;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+    
     public Pais getPais() {
         return pais;
     }
@@ -49,10 +71,7 @@ public class Contacto {
     public void setPais(Pais pais) {
         this.pais = pais;
     }
-    
 
-
-     
     
 }
 

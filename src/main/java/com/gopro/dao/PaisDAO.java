@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gopro.model;
+package com.gopro.dao;
 
-import com.gopro.entity.*;
+import com.gopro.model.Pais;
 
 /**
  *
  * @author jgomez
  */
-public class PaisModel extends AbstractModel<Pais> {
+public class PaisDAO extends AbstractDAO<Pais> {
     
-    public PaisModel(){
+    public PaisDAO(){
         super(Pais.class);
     }
     

@@ -5,22 +5,25 @@
  */
 package com.gopro.desktop;
 
-import com.gopro.entity.*;
-import com.gopro.model.*;
+import com.gopro.model.Pais;
+import com.gopro.model.Empresa;
+import com.gopro.dao.PaisDAO;
+import com.gopro.dao.EmpresaDAO;
 import java.util.*;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.*;
 
 /**
  *
  * @author jgomez
  */
-public class ContactoJframe extends javax.swing.JFrame {
+public class EmpresaJframe extends javax.swing.JFrame {
 
-    private final ContactoModel contactoModel = new ContactoModel();
+    private final EmpresaDAO empresaDAO = new EmpresaDAO();
     
-    private final PaisModel paisModel = new PaisModel();
+    private final PaisDAO paisDAO = new PaisDAO();
     
     private final TreeMap <Long, String> paisMap = new TreeMap<>();
     
@@ -50,17 +53,34 @@ public class ContactoJframe extends javax.swing.JFrame {
             
             String valor2 = (String) dtm.getValueAt(row, 2);
             
-            if(!"".equals((String) valor1) && !"".equals(valor2)){
+            String valor3 = (String) dtm.getValueAt(row, 3);
+            
+            String valor4 = (String) dtm.getValueAt(row, 4);
+            
+            if(!"".equals((String) valor1) && !"".equals(valor2) && !"".equals(valor3) && !"".equals(valor4) && col != 0){
+                System.out.println("Operando");
+                
                 if(llave != null){
-                    Contacto contacto = contactoModel.find(llave);
-                    contacto.setNombre((String) valor1);
-                    contacto.setPais(paisModel.find(getKeyForValue((String) valor2)));
-                    contactoModel.update(contacto);
+                    Empresa empresa = empresaDAO.find(llave);
+                    empresa.setNombre((String) valor1);
+                    empresa.setRazonsocial((String) valor2);
+                    empresa.setRuc((String) valor3);
+                    empresa.setPais(paisDAO.find(getKeyForValue((String) valor4)));
+                    if(!empresaDAO.update(empresa)){
+                        JOptionPane.showMessageDialog(null, "Error: No se actualizar, verifique información duplicada.");
+                    }
                 }else{
-                    Contacto contacto = new Contacto();
-                    contacto.setNombre((String) valor1);
-                    contacto.setPais(paisModel.find(getKeyForValue((String) valor2)));
-                    contactoModel.create(contacto);
+                    Empresa empresa = new Empresa();
+                    empresa.setNombre((String) valor1);
+                    empresa.setRazonsocial((String) valor2);
+                    empresa.setRuc((String) valor3);
+                    empresa.setPais(paisDAO.find(getKeyForValue((String) valor4)));
+                    empresa = empresaDAO.create(empresa);
+                    if(empresa != null){
+                        super.setValueAt(empresa.getId(),row,0);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Error: No se insertar el registro, verifique información duplicada.");
+                    }
                 }
             }
         }
@@ -73,13 +93,13 @@ public class ContactoJframe extends javax.swing.JFrame {
     /**
      * Creates new form Pais
      */
-    public ContactoJframe() {
+    public EmpresaJframe() {
         initComponents();
         LlenarTabla();
     }
     
     private Long getKeyForValue(String value) {
-        for (Map.Entry<Long, String> entry : paisMap.entrySet()) {
+        for (Map.Entry<Long, String> entry : this.paisMap.entrySet()) {
              if (entry.getValue().equals(value)) {
                  return entry.getKey();
              }
@@ -89,28 +109,33 @@ public class ContactoJframe extends javax.swing.JFrame {
     
     private void LlenarTabla(){
         
-        for (Pais pais : this.paisModel.findAll()){
-            paisMap.put(pais.getId(), pais.getNombre());
+        for (Pais pais : this.paisDAO.findAll()){
+            this.paisMap.put(pais.getId(), pais.getNombre());
         }
         
-        dtm.addColumn("Id");
-        dtm.addColumn("Nombre");
-        dtm.addColumn("Pais");
+        this.dtm.addColumn("Id");
+        this.dtm.addColumn("Nombre");
+        this.dtm.addColumn("Razón Social");
+        this.dtm.addColumn("RUC");
+        this.dtm.addColumn("Pais");
         
         
-        for (Contacto contacto : this.contactoModel.findAll()){
-            dtm.addRow(new Object[]{contacto.getId(), contacto.getNombre(), contacto.getPais().getNombre()});
+        for (Empresa empresa : this.empresaDAO.findAll()){
+            this.dtm.addRow(new Object[]{empresa.getId(), empresa.getNombre(), empresa.getRazonsocial(), empresa.getRuc(), empresa.getPais().getNombre()});
         }
         
-        this.paisTabla.setModel(dtm);
+        this.empresaTabla.setModel(this.dtm);
         
-        TableColumn idColumn = paisTabla.getColumnModel().getColumn(0);
-        TableColumn paisColumn = paisTabla.getColumnModel().getColumn(2);
+        TableColumn idColumn = this.empresaTabla.getColumnModel().getColumn(0);
+        TableColumn nombreColumn = this.empresaTabla.getColumnModel().getColumn(1);
+        TableColumn razonSocialColumn = this.empresaTabla.getColumnModel().getColumn(2);
+        TableColumn rucColumn = this.empresaTabla.getColumnModel().getColumn(3);
+        TableColumn paisColumn = this.empresaTabla.getColumnModel().getColumn(4);
 
         
         JComboBox comboBox = new JComboBox();
         
-        for (Pais pais : this.paisModel.findAll()){
+        for (Pais pais : this.paisDAO.findAll()){
             comboBox.addItem(pais.getNombre());
         }
         idColumn.setPreferredWidth(10);
@@ -129,15 +154,15 @@ public class ContactoJframe extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        paisTabla = new javax.swing.JTable();
+        empresaTabla = new javax.swing.JTable();
         AgregarBoton = new javax.swing.JButton();
         BorrarBoton = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Contactos");
 
-        paisTabla.setModel(new javax.swing.table.DefaultTableModel(
+        empresaTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -145,8 +170,8 @@ public class ContactoJframe extends javax.swing.JFrame {
 
             }
         ));
-        paisTabla.setCellSelectionEnabled(true);
-        jScrollPane1.setViewportView(paisTabla);
+        empresaTabla.setCellSelectionEnabled(true);
+        jScrollPane1.setViewportView(empresaTabla);
 
         AgregarBoton.setText("Nuevo");
         AgregarBoton.addActionListener(new java.awt.event.ActionListener() {
@@ -166,7 +191,7 @@ public class ContactoJframe extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(AgregarBoton)
@@ -181,7 +206,7 @@ public class ContactoJframe extends javax.swing.JFrame {
                     .addComponent(AgregarBoton)
                     .addComponent(BorrarBoton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
         );
 
         pack();
@@ -189,19 +214,36 @@ public class ContactoJframe extends javax.swing.JFrame {
 
     private void AgregarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarBotonActionPerformed
         
-        dtm.addRow(new Object[]{null, "", ""});
+        this.dtm.addRow(new Object[]{null, "", "", "", ""});
 
     }//GEN-LAST:event_AgregarBotonActionPerformed
 
     private void BorrarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarBotonActionPerformed
-        int[] rows = paisTabla.getSelectedRows();
+        
+        int botonDialogo = JOptionPane.YES_NO_OPTION;
+        int resultadoDialogo = JOptionPane.showConfirmDialog (null, "Esta seguro que desea eliminar el registro?","Advertencia",botonDialogo );
+        
+        if(resultadoDialogo == JOptionPane.NO_OPTION){
+            return;
+        }
+        
+        int[] rows = this.empresaTabla.getSelectedRows();
         for(int i=0;i<rows.length;i++){
-            Long valor = (Long)dtm.getValueAt(rows[i]-i, 0);
-            if(valor != null){
-                removedRows.add(valor);
-                System.out.println(((Long) dtm.getValueAt(rows[i]-i, 0)));
+            Long llave = (Long)this.dtm.getValueAt(rows[i]-i, 0);
+            if(llave != null){
+                this.removedRows.add(llave);
+                
+                Empresa empresa = this.empresaDAO.find(llave);
+                
+                if(this.empresaDAO.delete(empresa)){
+                    System.out.println("Se ha borrado de la base de datos el registro "+((Long) dtm.getValueAt(rows[i]-i, 0)));
+                    this.dtm.removeRow(rows[i]-i);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Error: No se puedo eliminar, verifique que no tenga registros dependientes.");
+                }
+            }else{
+                this.dtm.removeRow(rows[i]-i);
             }
-            dtm.removeRow(rows[i]-i);
         }
     }//GEN-LAST:event_BorrarBotonActionPerformed
 
@@ -222,14 +264,18 @@ public class ContactoJframe extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ContactoJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpresaJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ContactoJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpresaJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ContactoJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpresaJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ContactoJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpresaJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -239,7 +285,7 @@ public class ContactoJframe extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new ContactoJframe().setVisible(true);
+                new EmpresaJframe().setVisible(true);
             }
         });
     }
@@ -247,8 +293,8 @@ public class ContactoJframe extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AgregarBoton;
     private javax.swing.JButton BorrarBoton;
+    private javax.swing.JTable empresaTabla;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable paisTabla;
     // End of variables declaration//GEN-END:variables
 }

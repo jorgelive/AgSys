@@ -1,21 +1,20 @@
-package com.gopro.model;
+package com.gopro.dao;
  
-import com.gopro.entity.*;
 import java.io.*;
 import java.util.*;
 import org.hibernate.*;
  
 @SuppressWarnings("unchecked")
-public abstract class AbstractModel<T> {
+public abstract class AbstractDAO<T> {
  
     private Class<T> entityClass;
     protected final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
  
-    public AbstractModel(Class<T> entityClass) {
+    public AbstractDAO(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
  
-    public AbstractModel() {
+    public AbstractDAO() {
     }
  
     public List<T> findAll() {
@@ -29,40 +28,48 @@ public abstract class AbstractModel<T> {
         }
     }
  
-    public void update(T instance) {
+    public Boolean update(T instance) {
         try {
             if (!sessionFactory.getCurrentSession().getTransaction().isActive())
                 sessionFactory.getCurrentSession().getTransaction().begin();            
             sessionFactory.getCurrentSession().merge(instance);
             sessionFactory.getCurrentSession().getTransaction().commit();
+            return true;
         } catch (RuntimeException re) {
             sessionFactory.getCurrentSession().getTransaction().rollback();
-            throw re;
+            return false;
+            //throw re;
         }
     }
  
-    public void delete(T instance) {
+    public Boolean delete(T instance) {
         try {
             if (!sessionFactory.getCurrentSession().getTransaction().isActive())
                 sessionFactory.getCurrentSession().getTransaction().begin();            
             sessionFactory.getCurrentSession().delete(instance);
             sessionFactory.getCurrentSession().getTransaction().commit();
+            return true;
         } catch (RuntimeException re) {
             sessionFactory.getCurrentSession().getTransaction().rollback();
-            throw re;
+            return false;
         }
     }
- 
-    public void create(T instance) {
+    
+    public T create(T instance) {
+
         try {
             if (!sessionFactory.getCurrentSession().getTransaction().isActive())
                 sessionFactory.getCurrentSession().getTransaction().begin();            
             sessionFactory.getCurrentSession().persist(instance);
             sessionFactory.getCurrentSession().getTransaction().commit();
+            return instance;
+            
         } catch (RuntimeException re) {
             sessionFactory.getCurrentSession().getTransaction().rollback();
-            throw re;
+            return null;
+            //throw re;
         }
+        
     }
  
     public T find(Object primarykey) {
