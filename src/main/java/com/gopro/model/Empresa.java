@@ -7,6 +7,10 @@ package com.gopro.model;
 
 import javax.persistence.*;
 
+/**
+ *
+ * @author jgomez
+ */
 @Entity
 @Table(name="empresa")
 public class Empresa {

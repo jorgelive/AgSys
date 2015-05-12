@@ -22,7 +22,7 @@ import javax.swing.table.*;
 public class EmpresaJframe extends javax.swing.JFrame {
 
     private final EmpresaDAO empresaDAO = new EmpresaDAO();
-    
+
     private final PaisDAO paisDAO = new PaisDAO();
     
     private final TreeMap <Long, String> paisMap = new TreeMap<>();
@@ -32,11 +32,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
         @Override
         public boolean isCellEditable(int row, int column)
         {
-            if(column == 0){
-                return false;
-            }else{
-                return true;
-            }
+            return column != 0;
         }
         
 
@@ -44,17 +40,11 @@ public class EmpresaJframe extends javax.swing.JFrame {
         public void setValueAt(Object value, int row, int col) {
             
             super.setValueAt(value,row,col);
-            
             fireTableCellUpdated(row, col);
-            
             Long llave = (Long) dtm.getValueAt(row, 0);
-            
             String valor1 = (String) dtm.getValueAt(row, 1);
-            
             String valor2 = (String) dtm.getValueAt(row, 2);
-            
             String valor3 = (String) dtm.getValueAt(row, 3);
-            
             String valor4 = (String) dtm.getValueAt(row, 4);
             
             if(!"".equals((String) valor1) && !"".equals(valor2) && !"".equals(valor3) && !"".equals(valor4) && col != 0){
@@ -88,8 +78,6 @@ public class EmpresaJframe extends javax.swing.JFrame {
 
     private final List<Long> removedRows = new ArrayList<>();
 
-    
-    
     /**
      * Creates new form Pais
      */
@@ -104,7 +92,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
                  return entry.getKey();
              }
          }
-        return new Long(0);
+        return (long) 0;
     }
     
     private void LlenarTabla(){
@@ -272,13 +260,6 @@ public class EmpresaJframe extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(EmpresaJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

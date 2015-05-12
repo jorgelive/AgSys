@@ -5,6 +5,8 @@
  */
 package com.gopro.desktop;
 
+import java.awt.Color;
+import javax.swing.JFrame;
 
 /**
  *
@@ -17,6 +19,13 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+    }
+    
+    private AutenticacionJdialog passDialog;
+
+    public void TestFrame() {
+        passDialog = new AutenticacionJdialog(this, true);
+        passDialog.setVisible(true);
     }
 
     /**
@@ -94,11 +103,11 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 778, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
+            .addGap(0, 436, Short.MAX_VALUE)
         );
 
         pack();
@@ -106,12 +115,15 @@ public class Principal extends javax.swing.JFrame {
 
     private void PaisMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PaisMenuItemActionPerformed
         PaisJframe pais = new PaisJframe();
+        pais.setLocationRelativeTo(null);
         pais.setVisible(true);
     }//GEN-LAST:event_PaisMenuItemActionPerformed
 
     private void EmpresaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmpresaMenuItemActionPerformed
         EmpresaJframe empresa = new EmpresaJframe();
+        empresa.setLocationRelativeTo(null);
         empresa.setVisible(true);
+        
     }//GEN-LAST:event_EmpresaMenuItemActionPerformed
 
     private void SalirMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirMenuItem1ActionPerformed
@@ -120,11 +132,13 @@ public class Principal extends javax.swing.JFrame {
 
     private void ClienteMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClienteMenuItem1ActionPerformed
         ClienteJframe cliente = new ClienteJframe();
+        cliente.setLocationRelativeTo(null);
         cliente.setVisible(true);
     }//GEN-LAST:event_ClienteMenuItem1ActionPerformed
 
     private void ProveedorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProveedorMenuItemActionPerformed
         ProveedorJframe proveedor = new ProveedorJframe();
+        proveedor.setLocationRelativeTo(null);
         proveedor.setVisible(true);
     }//GEN-LAST:event_ProveedorMenuItemActionPerformed
 
@@ -158,9 +172,21 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                
+                Principal principal = new Principal();
+                principal.setLocationRelativeTo(null);
+                AutenticacionJdialog passDialog = new AutenticacionJdialog(principal, true);
+                passDialog.setVisible(true);
+                principal.getContentPane().setBackground(Color.WHITE);
+                principal.setTitle("Principal -  Autenticado");
+                principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                //principal.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
             }
         });
+        
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

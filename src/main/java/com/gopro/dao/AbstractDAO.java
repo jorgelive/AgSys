@@ -3,7 +3,11 @@ package com.gopro.dao;
 import java.io.*;
 import java.util.*;
 import org.hibernate.*;
- 
+
+/**
+ *
+ * @author jgomez
+ */
 @SuppressWarnings("unchecked")
 public abstract class AbstractDAO<T> {
  

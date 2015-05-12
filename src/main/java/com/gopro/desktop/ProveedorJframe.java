@@ -32,31 +32,19 @@ public class ProveedorJframe extends javax.swing.JFrame {
         @Override
         public boolean isCellEditable(int row, int column)
         {
-            if(column == 0){
-                return false;
-            }else{
-                return true;
-            }
+            return column != 0;
         }
-        
 
         @Override
         public void setValueAt(Object value, int row, int col) {
             
             super.setValueAt(value,row,col);
-            
             fireTableCellUpdated(row, col);
-            
             Integer valorInteger3 = 0;
-            
             Long llave = (Long) dtm.getValueAt(row, 0);
-            
             String valor1 = (String) dtm.getValueAt(row, 1);
-            
             String valor2 = (String) dtm.getValueAt(row, 2);
-            
             String valor3 = (String) dtm.getValueAt(row, 3);
- 
             String valor4 = (String) dtm.getValueAt(row, 4);
             
             if(!"".equals((String) valor1) && !"".equals(valor2) && !"".equals(valor3) && !"".equals(valor4) && col != 0){
@@ -72,7 +60,6 @@ public class ProveedorJframe extends javax.swing.JFrame {
                     Proveedor proveedor = proveedorDAO.find(llave);
                     proveedor.setNombre((String) valor1);
                     proveedor.setDireccion((String) valor2);
-                    
                     proveedor.setDiaspago(valorInteger3);
                     proveedor.setEmpresa(empresaDAO.find(getKeyForValue((String) valor4)));
                     if(!proveedorDAO.update(proveedor)){
@@ -96,8 +83,6 @@ public class ProveedorJframe extends javax.swing.JFrame {
     };
 
     private final List<Long> removedRows = new ArrayList<>();
-
-    
     
     /**
      * Creates new form Empresa
@@ -113,7 +98,7 @@ public class ProveedorJframe extends javax.swing.JFrame {
                  return entry.getKey();
              }
          }
-        return new Long(0);
+        return (long) 0;
     }
     
     private void LlenarTabla(){
@@ -140,8 +125,7 @@ public class ProveedorJframe extends javax.swing.JFrame {
         TableColumn direccionColumn = this.proveedorTabla.getColumnModel().getColumn(2);
         TableColumn diasPagoColumn = this.proveedorTabla.getColumnModel().getColumn(3);
         TableColumn empresaColumn = this.proveedorTabla.getColumnModel().getColumn(4);
-
-        
+       
         JComboBox comboBox = new JComboBox();
         
         for (Empresa empresa : this.empresaDAO.findAll()){
@@ -281,37 +265,6 @@ public class ProveedorJframe extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ProveedorJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

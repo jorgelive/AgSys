@@ -24,27 +24,18 @@ public class PaisJframe extends javax.swing.JFrame {
         @Override
         public boolean isCellEditable(int row, int column)
         {
-            if(column == 0){
-                return false;
-            }else{
-                return true;
-            }
+            return column != 0;
         }
-        
 
         @Override
         public void setValueAt(Object value, int row, int col) {
             
             super.setValueAt(value,row,col);
-            
             fireTableCellUpdated(row, col);
-            
             Long llave = (Long) dtm.getValueAt(row, 0);
-            
             String valor1 = (String) dtm.getValueAt(row, 1);
-            
             String valor2 = (String) dtm.getValueAt(row, 2);
-            
+
             if(!"".equals((String) valor1) && !"".equals((String) valor2) && col != 0){
                 System.out.println("Operando");
                 
@@ -72,8 +63,6 @@ public class PaisJframe extends javax.swing.JFrame {
     };
 
     private final List<Long> removedRows = new ArrayList<>();
-
-    
     
     /**
      * Creates new form Pais
@@ -232,13 +221,6 @@ public class PaisJframe extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PaisJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

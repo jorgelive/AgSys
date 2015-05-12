@@ -5,13 +5,14 @@
  */
 package com.gopro.model;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 
+/**
+ *
+ * @author jgomez
+ */
 @Entity
 @Table(name="pais")
-
 public class Pais {
     
     @Id

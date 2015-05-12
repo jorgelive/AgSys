@@ -7,7 +7,11 @@ package com.gopro.dao;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.SessionFactory;
- 
+
+/**
+ *
+ * @author jgomez
+ */
 public class HibernateUtil {
  
     private static final SessionFactory sessionFactory;
@@ -16,8 +20,7 @@ public class HibernateUtil {
         try {            
             sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         } catch (Throwable ex) {
-            // Log the exception.
-            System.err.println("Initial SessionFactory creation failed." + ex);
+            System.err.println("Creacion inicial de SessionFactory falló." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
