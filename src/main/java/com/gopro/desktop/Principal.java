@@ -34,6 +34,8 @@ public class Principal extends javax.swing.JFrame {
         MantenimientoMenu = new javax.swing.JMenu();
         PaisMenuItem = new javax.swing.JMenuItem();
         EmpresaMenuItem = new javax.swing.JMenuItem();
+        ClienteMenuItem1 = new javax.swing.JMenuItem();
+        ProveedorMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Principal");
@@ -68,6 +70,22 @@ public class Principal extends javax.swing.JFrame {
         });
         MantenimientoMenu.add(EmpresaMenuItem);
 
+        ClienteMenuItem1.setText("Clientes");
+        ClienteMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClienteMenuItem1ActionPerformed(evt);
+            }
+        });
+        MantenimientoMenu.add(ClienteMenuItem1);
+
+        ProveedorMenuItem.setText("Proveedores");
+        ProveedorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ProveedorMenuItemActionPerformed(evt);
+            }
+        });
+        MantenimientoMenu.add(ProveedorMenuItem);
+
         jMenuBar1.add(MantenimientoMenu);
 
         setJMenuBar(jMenuBar1);
@@ -99,6 +117,16 @@ public class Principal extends javax.swing.JFrame {
     private void SalirMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_SalirMenuItem1ActionPerformed
+
+    private void ClienteMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClienteMenuItem1ActionPerformed
+        ClienteJframe cliente = new ClienteJframe();
+        cliente.setVisible(true);
+    }//GEN-LAST:event_ClienteMenuItem1ActionPerformed
+
+    private void ProveedorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProveedorMenuItemActionPerformed
+        ProveedorJframe proveedor = new ProveedorJframe();
+        proveedor.setVisible(true);
+    }//GEN-LAST:event_ProveedorMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,9 +164,11 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ClienteMenuItem1;
     private javax.swing.JMenuItem EmpresaMenuItem;
     private javax.swing.JMenu MantenimientoMenu;
     private javax.swing.JMenuItem PaisMenuItem;
+    private javax.swing.JMenuItem ProveedorMenuItem;
     private javax.swing.JMenuItem SalirMenuItem1;
     private javax.swing.JMenu SistemaMenu;
     private javax.swing.JMenuBar jMenuBar1;

@@ -5,9 +5,13 @@
  */
 package com.gopro.desktop;
 
-import com.gopro.model.Pais;
-import com.gopro.dao.PaisDAO;
+import com.gopro.model.Empresa;
+import com.gopro.model.Cliente;
+import com.gopro.dao.EmpresaDAO;
+import com.gopro.dao.ClienteDAO;
 import java.util.*;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.*;
 
@@ -15,9 +19,13 @@ import javax.swing.table.*;
  *
  * @author jgomez
  */
-public class PaisJframe extends javax.swing.JFrame {
+public class ClienteJframe extends javax.swing.JFrame {
 
-    private final PaisDAO paisDAO = new PaisDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
+    
+    private final EmpresaDAO empresaDAO = new EmpresaDAO();
+    
+    private final TreeMap <Long, String> empresaMap = new TreeMap<>();
     
     DefaultTableModel dtm = new DefaultTableModel() {
 
@@ -39,33 +47,49 @@ public class PaisJframe extends javax.swing.JFrame {
             
             fireTableCellUpdated(row, col);
             
+            Integer valorInteger3 = 0;
+            
             Long llave = (Long) dtm.getValueAt(row, 0);
             
             String valor1 = (String) dtm.getValueAt(row, 1);
             
             String valor2 = (String) dtm.getValueAt(row, 2);
             
-            if(!"".equals((String) valor1) && !"".equals((String) valor2) && col != 0){
+            String valor3 = (String) dtm.getValueAt(row, 3);
+ 
+            String valor4 = (String) dtm.getValueAt(row, 4);
+            
+            if(!"".equals((String) valor1) && !"".equals(valor2) && !"".equals(valor3) && !"".equals(valor4) && col != 0){
                 System.out.println("Operando");
                 
+                try{
+                    valorInteger3 = Integer.parseInt(valor3);
+                }catch(NumberFormatException e){
+                    JOptionPane.showMessageDialog(null, "El valor del monto de crédito es inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                
                 if(llave != null){
-                    Pais pais = paisDAO.find(llave);
-                    pais.setNombre((String) valor1);
-                    pais.setNacionalidad((String) valor2);
-                    if(!paisDAO.update(pais)){
+                    Cliente cliente = clienteDAO.find(llave);
+                    cliente.setNombre((String) valor1);
+                    cliente.setDireccion((String) valor2);
+                    
+                    cliente.setMontocredito(valorInteger3);
+                    cliente.setEmpresa(empresaDAO.find(getKeyForValue((String) valor4)));
+                    if(!clienteDAO.update(cliente)){
                         JOptionPane.showMessageDialog(null, "No se actualizar, verifique información duplicada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }else{
-                    Pais pais = new Pais();
-                    pais.setNombre((String) valor1);
-                    pais.setNacionalidad((String) valor2);
-                    pais = paisDAO.create(pais);
-                    if(pais != null){
-                        super.setValueAt(pais.getId(),row,0);
+                    Cliente cliente = new Cliente();
+                    cliente.setNombre((String) valor1);
+                    cliente.setDireccion((String) valor2);
+                    cliente.setMontocredito(valorInteger3);
+                    cliente.setEmpresa(empresaDAO.find(getKeyForValue((String) valor4)));
+                    cliente = clienteDAO.create(cliente);
+                    if(cliente != null){
+                        super.setValueAt(cliente.getId(),row,0);
                     }else{
                         JOptionPane.showMessageDialog(null, "No se insertar el registro, verifique información duplicada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    
                 }
             }
         }
@@ -76,30 +100,56 @@ public class PaisJframe extends javax.swing.JFrame {
     
     
     /**
-     * Creates new form Pais
+     * Creates new form Empresa
      */
-    public PaisJframe() {
+    public ClienteJframe() {
         initComponents();
         LlenarTabla();
     }
     
+    private Long getKeyForValue(String value) {
+        for (Map.Entry<Long, String> entry : this.empresaMap.entrySet()) {
+             if (entry.getValue().equals(value)) {
+                 return entry.getKey();
+             }
+         }
+        return new Long(0);
+    }
+    
     private void LlenarTabla(){
+        
+        for (Empresa empresa : this.empresaDAO.findAll()){
+            this.empresaMap.put(empresa.getId(), empresa.getNombre());
+        }
         
         this.dtm.addColumn("Id");
         this.dtm.addColumn("Nombre");
-        this.dtm.addColumn("Nacionalidad");
+        this.dtm.addColumn("Dirección");
+        this.dtm.addColumn("Monto de crédito");
+        this.dtm.addColumn("Empresa");
         
         
-        for (Pais pais : this.paisDAO.findAll()){
-            this.dtm.addRow(new Object[]{pais.getId(), pais.getNombre(),pais.getNacionalidad()});
+        for (Cliente cliente : this.clienteDAO.findAll()){
+            this.dtm.addRow(new Object[]{cliente.getId(), cliente.getNombre(), cliente.getDireccion(), cliente.getMontocredito().toString(), cliente.getEmpresa().getNombre()});
         }
         
-        this.paisTabla.setModel(this.dtm);
+        this.clienteTabla.setModel(this.dtm);
         
-        TableColumn idColumn = this.paisTabla.getColumnModel().getColumn(0);
-        TableColumn nombreColumn = this.paisTabla.getColumnModel().getColumn(1);
-        TableColumn nacionalidadColumn = this.paisTabla.getColumnModel().getColumn(2);
+        TableColumn idColumn = this.clienteTabla.getColumnModel().getColumn(0);
+        TableColumn nombreColumn = this.clienteTabla.getColumnModel().getColumn(1);
+        TableColumn direccionColumn = this.clienteTabla.getColumnModel().getColumn(2);
+        TableColumn montoCreditoColumn = this.clienteTabla.getColumnModel().getColumn(3);
+        TableColumn empresaColumn = this.clienteTabla.getColumnModel().getColumn(4);
+
+        
+        JComboBox comboBox = new JComboBox();
+        
+        for (Empresa empresa : this.empresaDAO.findAll()){
+            comboBox.addItem(empresa.getNombre());
+        }
         idColumn.setPreferredWidth(10);
+        empresaColumn.setCellEditor(new DefaultCellEditor(comboBox));
+    
     }
 
     /**
@@ -113,15 +163,15 @@ public class PaisJframe extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        paisTabla = new javax.swing.JTable();
+        clienteTabla = new javax.swing.JTable();
         AgregarBoton = new javax.swing.JButton();
         BorrarBoton = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
-        setTitle("Paises");
+        setTitle("Clientes");
 
-        paisTabla.setModel(new javax.swing.table.DefaultTableModel(
+        clienteTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -129,8 +179,8 @@ public class PaisJframe extends javax.swing.JFrame {
 
             }
         ));
-        paisTabla.setCellSelectionEnabled(true);
-        jScrollPane1.setViewportView(paisTabla);
+        clienteTabla.setCellSelectionEnabled(true);
+        jScrollPane1.setViewportView(clienteTabla);
 
         AgregarBoton.setText("Nuevo");
         AgregarBoton.addActionListener(new java.awt.event.ActionListener() {
@@ -150,7 +200,7 @@ public class PaisJframe extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(AgregarBoton)
@@ -165,7 +215,7 @@ public class PaisJframe extends javax.swing.JFrame {
                     .addComponent(AgregarBoton)
                     .addComponent(BorrarBoton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
         );
 
         pack();
@@ -173,34 +223,33 @@ public class PaisJframe extends javax.swing.JFrame {
 
     private void AgregarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarBotonActionPerformed
         
-        this.dtm.addRow(new Object[]{null, "", ""});
+        this.dtm.addRow(new Object[]{null, "", "", "", ""});
 
     }//GEN-LAST:event_AgregarBotonActionPerformed
 
     private void BorrarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarBotonActionPerformed
         
         int botonDialogo = JOptionPane.YES_NO_OPTION;
-        int resultadoDialogo = JOptionPane.showConfirmDialog (null, "Esta seguro que desea eliminar el registro?", "Advertencia", botonDialogo );
+        int resultadoDialogo = JOptionPane.showConfirmDialog (null, "Esta seguro que desea eliminar el registro?", "Advertencia",botonDialogo );
         
         if(resultadoDialogo == JOptionPane.NO_OPTION){
             return;
         }
         
-        int[] rows = this.paisTabla.getSelectedRows();
+        int[] rows = this.clienteTabla.getSelectedRows();
         for(int i=0;i<rows.length;i++){
             Long llave = (Long)this.dtm.getValueAt(rows[i]-i, 0);
             if(llave != null){
                 this.removedRows.add(llave);
                 
-                Pais pais = this.paisDAO.find(llave);
+                Cliente cliente = this.clienteDAO.find(llave);
                 
-                if(this.paisDAO.delete(pais)){
+                if(this.clienteDAO.delete(cliente)){
                     System.out.println("Se ha borrado de la base de datos el registro "+((Long) dtm.getValueAt(rows[i]-i, 0)));
                     this.dtm.removeRow(rows[i]-i);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Error: No se puedo eliminar, verifique que no tenga registros dependientes.", "Error",  JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No se puedo eliminar, verifique que no tenga registros dependientes.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            
             }else{
                 this.dtm.removeRow(rows[i]-i);
             }
@@ -224,14 +273,22 @@ public class PaisJframe extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PaisJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PaisJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PaisJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PaisJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJframe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -245,7 +302,7 @@ public class PaisJframe extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new PaisJframe().setVisible(true);
+                new ClienteJframe().setVisible(true);
             }
         });
     }
@@ -253,8 +310,8 @@ public class PaisJframe extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AgregarBoton;
     private javax.swing.JButton BorrarBoton;
+    private javax.swing.JTable clienteTabla;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable paisTabla;
     // End of variables declaration//GEN-END:variables
 }

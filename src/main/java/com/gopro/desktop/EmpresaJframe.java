@@ -67,7 +67,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
                     empresa.setRuc((String) valor3);
                     empresa.setPais(paisDAO.find(getKeyForValue((String) valor4)));
                     if(!empresaDAO.update(empresa)){
-                        JOptionPane.showMessageDialog(null, "Error: No se actualizar, verifique información duplicada.");
+                        JOptionPane.showMessageDialog(null, "No se actualizar, verifique información duplicada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }else{
                     Empresa empresa = new Empresa();
@@ -79,7 +79,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
                     if(empresa != null){
                         super.setValueAt(empresa.getId(),row,0);
                     }else{
-                        JOptionPane.showMessageDialog(null, "Error: No se insertar el registro, verifique información duplicada.");
+                        JOptionPane.showMessageDialog(null, "No se insertar el registro, verifique información duplicada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -160,7 +160,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
 
         jButton1.setText("jButton1");
 
-        setTitle("Contactos");
+        setTitle("Empresas");
 
         empresaTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -221,7 +221,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
     private void BorrarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarBotonActionPerformed
         
         int botonDialogo = JOptionPane.YES_NO_OPTION;
-        int resultadoDialogo = JOptionPane.showConfirmDialog (null, "Esta seguro que desea eliminar el registro?","Advertencia",botonDialogo );
+        int resultadoDialogo = JOptionPane.showConfirmDialog (null, "Esta seguro que desea eliminar el registro?", "Advertencia",botonDialogo );
         
         if(resultadoDialogo == JOptionPane.NO_OPTION){
             return;
@@ -239,7 +239,7 @@ public class EmpresaJframe extends javax.swing.JFrame {
                     System.out.println("Se ha borrado de la base de datos el registro "+((Long) dtm.getValueAt(rows[i]-i, 0)));
                     this.dtm.removeRow(rows[i]-i);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Error: No se puedo eliminar, verifique que no tenga registros dependientes.");
+                    JOptionPane.showMessageDialog(null, "No se puedo eliminar, verifique que no tenga registros dependientes.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }else{
                 this.dtm.removeRow(rows[i]-i);

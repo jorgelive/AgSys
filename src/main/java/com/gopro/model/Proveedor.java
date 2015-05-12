@@ -21,7 +21,7 @@ public class Proveedor {
     @Column(name="direccion", unique = true, nullable = false, length = 100)
     private String direccion;
     
-    @Column(name="diaspago", unique = true, nullable = false)
+    @Column(name="diaspago", nullable = false)
     private Integer diaspago;
 
      

@@ -21,7 +21,7 @@ public class Cliente {
     @Column(name="direccion", unique = true, nullable = false, length = 100)
     private String direccion;
     
-    @Column(name="montomonto", unique = true, nullable = false)
+    @Column(name="montocredito", nullable = false)
     private Integer montocredito;
 
      
