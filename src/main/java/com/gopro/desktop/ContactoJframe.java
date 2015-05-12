@@ -10,7 +10,6 @@ import com.gopro.model.*;
 import java.util.*;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.RowFilter.Entry;
 import javax.swing.table.*;
 
 /**
@@ -24,8 +23,6 @@ public class ContactoJframe extends javax.swing.JFrame {
     private final PaisModel paisModel = new PaisModel();
     
     private final TreeMap <Long, String> paisMap = new TreeMap<>();
-    
-
     
     DefaultTableModel dtm = new DefaultTableModel() {
 
@@ -43,35 +40,34 @@ public class ContactoJframe extends javax.swing.JFrame {
         @Override
         public void setValueAt(Object value, int row, int col) {
             
+            super.setValueAt(value,row,col);
+            
+            fireTableCellUpdated(row, col);
+            
             Long llave = (Long) dtm.getValueAt(row, 0);
             
             String valor1 = (String) dtm.getValueAt(row, 1);
             
             String valor2 = (String) dtm.getValueAt(row, 2);
             
-            if(col == 1 && (String) value != "" && valor2 != ""){
+            if(!"".equals((String) valor1) && !"".equals(valor2)){
                 if(llave != null){
                     Contacto contacto = contactoModel.find(llave);
-                    contacto.setNombre((String) value);
+                    contacto.setNombre((String) valor1);
+                    contacto.setPais(paisModel.find(getKeyForValue((String) valor2)));
                     contactoModel.update(contacto);
+                }else{
+                    Contacto contacto = new Contacto();
+                    contacto.setNombre((String) valor1);
+                    contacto.setPais(paisModel.find(getKeyForValue((String) valor2)));
+                    contactoModel.create(contacto);
                 }
-            }else if(col == 2 && (String) value != "" && valor1 != ""){
-                if(llave != null){
-                    Contacto contacto = contactoModel.find(llave);
-                    contacto.setPais(paisModel.find(getKeyForValue((String) value)));
-                    contactoModel.update(contacto);
-                }
-                
             }
-            fireTableCellUpdated(row, col);
         }
     };
 
-    
     private final List<Long> removedRows = new ArrayList<>();
-    
-    private final List<Long> createdRows = new ArrayList<>();
-    
+
     
     
     /**
